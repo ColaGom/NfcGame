@@ -1,17 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.bluewave.nfcgame.MainActivity">
-    
+    style="@style/FrameLayout"
+    android:background="#f9f5f5"
+    tools:context=".activity.MainActivity">
+
+    <EditText
+        android:id="@+id/et_name"
+        android:layout_width="300dp"
+        android:layout_height="40dp"
+        android:layout_above="@+id/btn_join"
+        android:layout_alignLeft="@+id/iv_runner"
+        android:layout_alignStart="@+id/iv_runner"
+        android:layout_marginBottom="43dp"
+        android:hint="사용하실 이름을 입력하세요" />
+
+    <Button
+        android:id="@+id/btn_join"
+        android:layout_width="80dp"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"
+        android:text="입장" />
+
     <ImageView
-        android:id="@+id/iv_logo"
-        android:layout_width="match_parent"
-        android:layout_height="140dp" />
-    
+        android:id="@+id/iv_runner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/runner" />
+
+    <TextView
+        android:id="@+id/tv_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/iv_runner"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="24dp"
+        android:text="웹으로하는 활동형 게임 어플리케이션 "
+        android:textColor="#e90808" />
+
+    <Button
+        android:id="@+id/btn_rule"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:onClick="onClick_Help"
+        android:text="하는방법 알아보기" />
+
 </RelativeLayout>

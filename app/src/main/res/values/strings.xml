@@ -1,3 +1,23 @@
 <resources>
     <string name="app_name">NfcGame</string>
+    <string name="title_activity_map">Map</string>
+    <string name="input_nickname">닉네임을 입력해주세요.</string>
+    <string name="success_join">입장 성공</string>
+    <string name="fail_join">입장 실패</string>
+    <string name="create_room">방 만들기</string>
+    <string name="enter">입장</string>
+    <string name="enter_room">방 참여하기</string>
+    <string name="title_home">런닝맨</string>
+    <string name="title_main">런닝맨 메인</string>
+    <string name="limit">최대 인원</string>
+    <string name="room_name">방 제목</string>
+    <string name="create">생성</string>
+    <string name="cancel">취소</string>
+    <string name="empty_select_room">선택된 방이 없습니다.</string>
+    <string name="input_limit">최대 인원을 입력해주세요.</string>
+    <string name="input_room_name">방 제목을 입력해주세요.</string>
+    <string name="success_create_room">방생성 성공</string>
+    <string name="fail_create_room">방 생성 실패</string>
+    <string name="fail_enter_room">방입장 실패</string>
+    <string name="success_enter_room">방입장 성공</string>
 </resources>
