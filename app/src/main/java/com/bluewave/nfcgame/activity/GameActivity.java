@@ -2,18 +2,23 @@ package com.bluewave.nfcgame.activity;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
-import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.bluewave.nfcgame.R;
+import com.bluewave.nfcgame.base.BaseActivity;
 import com.bluewave.nfcgame.common.Const;
-import com.bluewave.nfcgame.common.GameClient;
+import com.bluewave.nfcgame.common.Dialoger;
 import com.bluewave.nfcgame.model.Room;
+import com.bluewave.nfcgame.net.Client;
+import com.bluewave.nfcgame.net.GameClient;
+import com.bluewave.nfcgame.service.GameService;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -21,7 +26,10 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class GameActivity extends FragmentActivity implements OnMapReadyCallback, LocationListener {
+import java.util.Timer;
+import java.util.TimerTask;
+
+public class GameActivity extends BaseActivity implements OnMapReadyCallback, GameService.Callback {
 
     private GoogleMap mMap;
     private LocationManager mLocationManager;
@@ -38,15 +46,20 @@ public class GameActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         mRoom = (Room)getIntent().getSerializableExtra(Const.EXTRA_ROOM);
+    }
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this ,new String[] {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION }, Const.REQUEST_PERMISSION_LOCATION);
-            return;
-        }
+    private void requestGameInfo()
+    {
+        GameClient.getInfo(mRoom.uid, new Client.Handler() {
+            @Override
+            public void onSuccess(Object object) {
+            }
 
-        mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
-        mLastLocation = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            @Override
+            public void onFail() {
+
+            }
+        }, Dialoger.createProgressDialog(GameActivity.this, true));
     }
 
     @Override
@@ -67,34 +80,22 @@ public class GameActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        onLocationChanged(mLastLocation);
-        // Add a marker in Sydney and move the camera
-        //LatLng sydney = new LatLng(-34, 151);
-       // mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-       // mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        Timer timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                requestGameInfo();
+            }
+        },5000, 0);
     }
 
     @Override
-    public void onLocationChanged(Location location) {
-        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-        mMap.addMarker(new MarkerOptions().position(latLng).title("test"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-
-        //TODO : API 에서 GAME LATLNG 업데이트 해줄것.
+    public void requestPermission() {
+        ActivityCompat.requestPermissions(this ,new String[] {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION }, Const.REQUEST_PERMISSION_LOCATION);
     }
 
     @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-
-    }
-
-    @Override
-    public void onProviderEnabled(String provider) {
-
-    }
-
-    @Override
-    public void onProviderDisabled(String provider) {
+    public void onChangeLocation() {
 
     }
 }

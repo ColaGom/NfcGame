@@ -16,7 +16,6 @@ import com.bluewave.nfcgame.adapter.RoomAdapter;
 import com.bluewave.nfcgame.base.BaseActivity;
 import com.bluewave.nfcgame.common.ActivityStarter;
 import com.bluewave.nfcgame.common.Dialoger;
-import com.bluewave.nfcgame.common.GameClient;
 import com.bluewave.nfcgame.common.Global;
 import com.bluewave.nfcgame.model.Room;
 import com.bluewave.nfcgame.net.Client;

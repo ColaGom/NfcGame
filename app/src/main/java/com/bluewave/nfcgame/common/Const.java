@@ -8,4 +8,5 @@ public class Const {
 
     public final static String EXTRA_ROOM = "extra.room";
 
+    public static final String TAG = "NfcGame";
 }
