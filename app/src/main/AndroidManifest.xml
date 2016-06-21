@@ -10,6 +10,8 @@
     -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
+    <uses-permission android:name="android.permission.NFC" />
+
     <application
         android:name=".common.GlobalApplication"
         android:allowBackup="true"
@@ -35,7 +37,13 @@
 
         <activity
             android:name=".activity.GameActivity"
-            android:label="@string/title_home" />
+            android:label="@string/title_home">
+            <intent-filter>
+                <action android:name="android.nfc.action.NDEF_DISCOVERED"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:mimeType="application/com.bluewave.nfcgame.beam" />
+            </intent-filter>
+        </activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -47,6 +55,8 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
+
+        <service android:name=".service.GameService" />
 
     </application>
 

@@ -28,6 +28,41 @@ public class RoomClient extends Client {
     private final static String TAG_ENTER = "enter";
     private final static String TAG_EXIT = "exit";
     private final static String TAG_GET_LIST = "get_list";
+    private final static String TAG_GET_INFO = "get_info";
+
+
+    public static void getInfo(int room_uid, final Handler handler)
+    {
+        Volleyer.volleyer().post(URL)
+                .addStringPart(NAME_TAG, TAG_GET_INFO)
+                .addStringPart("room_uid", room_uid + "")
+                .withListener(new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d(TAG, TAG_GET_INFO + " response : " + response);
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            if(jsonObject.getBoolean("error")){
+                                handler.onFail();
+                            }else{
+                                handler.onSuccess(new Gson().fromJson(jsonObject.getString("room"),Room.class));
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            handler.onFail();
+                        }
+
+                    }
+                })
+                .withErrorListener(new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        handler.onFail();
+                        Log.d(TAG, TAG_GET_INFO + " error");
+                    }
+                })
+                .execute();
+    }
 
     public static void enter(int user_uid, int room_uid, final Handler handler, final SweetAlertDialog dialog)
     {
@@ -68,11 +103,8 @@ public class RoomClient extends Client {
                 .execute();
     }
 
-    public static void exit(int user_uid, int room_uid, final Handler handler, final SweetAlertDialog dialog)
+    public static void exit(int user_uid, int room_uid, final Handler handler)
     {
-        dialog.setTitleText("퇴장중...");
-        dialog.show();
-
         Volleyer.volleyer().post(URL)
                 .addStringPart(NAME_TAG, TAG_EXIT)
                 .addStringPart("user_uid", user_uid + "")
@@ -81,7 +113,6 @@ public class RoomClient extends Client {
                     @Override
                     public void onResponse(String response) {
                         Log.d(TAG, TAG_EXIT + " response : " + response);
-                        dialog.dismiss();
                         try {
                             JSONObject jsonObject = new JSONObject(response);
                             if(jsonObject.getBoolean("error")){
@@ -99,7 +130,6 @@ public class RoomClient extends Client {
                 .withErrorListener(new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        dialog.dismiss();
                         handler.onFail();
                         Log.d(TAG, TAG_EXIT + " error");
                     }
@@ -107,13 +137,14 @@ public class RoomClient extends Client {
                 .execute();
     }
 
-    public static void create(String name,String limit, final Handler handler, final SweetAlertDialog dialog)
+    public static void create(int user_uid, String name,String limit, final Handler handler, final SweetAlertDialog dialog)
     {
         dialog.setTitleText("방 생성...");
         dialog.show();
 
         Volleyer.volleyer().post(URL)
                 .addStringPart(NAME_TAG, TAG_CREATE)
+                .addStringPart("user_uid", user_uid + "")
                 .addStringPart("name", name)
                 .addStringPart("limit", limit)
                 .withListener(new Response.Listener<String>() {

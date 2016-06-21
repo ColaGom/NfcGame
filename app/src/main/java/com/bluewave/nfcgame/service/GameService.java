@@ -12,7 +12,9 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.util.Log;
 
+import com.bluewave.nfcgame.common.Const;
 import com.bluewave.nfcgame.common.Global;
 import com.bluewave.nfcgame.model.Room;
 import com.bluewave.nfcgame.net.Client;
@@ -31,15 +33,43 @@ public class GameService extends Service implements LocationListener {
     private Location mLastLocation;
     private Room mRoom;
 
-    public GameService(Callback callback, Room room)
+    public void setCallback(Callback callback)
     {
         mCallback = callback;
+    }
+
+    public void setRoom(Room room)
+    {
         mRoom = room;
+    }
+
+    public void enableGPS()
+    {
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if(mCallback != null) {
+                mCallback.requestPermission();
+            }
+            return;
+        }
+        Log.d(Const.TAG, "onCreate");
+        mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, this);
+        mLastLocation = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        if(mLastLocation != null)
+            updateMyLocation(new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude()));
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        Log.d(Const.TAG, "onStartCommand");
+        return super.onStartCommand(intent, flags, startId);
     }
 
     private void updateMyLocation(LatLng latlng)
     {
-        GameClient.update(Global.getLoginUser().uid, mRoom.uid, latlng, new Client.Handler() {
+        Log.d(Const.TAG, "updateMyLocation");
+        GameClient.updateLatLng(Global.getLoginUser().uid, mRoom.uid, latlng, new Client.Handler() {
             @Override
             public void onSuccess(Object object) {
 
@@ -85,16 +115,18 @@ public class GameService extends Service implements LocationListener {
     public void onCreate() {
         super.onCreate();
 
-        mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            if(mCallback != null) {
-                mCallback.requestPermission();
-            }
-            return;
-        }
-        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, this);
-        mLastLocation = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        updateMyLocation(new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude()));
+//        mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//            if(mCallback != null) {
+//                mCallback.requestPermission();
+//            }
+//            return;
+//        }
+//        Log.d(Const.TAG, "onCreate");
+//        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, this);
+//        mLastLocation = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+//        updateMyLocation(new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude()));
+
     }
 
     @Override

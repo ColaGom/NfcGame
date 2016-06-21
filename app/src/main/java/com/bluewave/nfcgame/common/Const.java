@@ -5,6 +5,7 @@ package com.bluewave.nfcgame.common;
  */
 public class Const {
     public final static int REQUEST_PERMISSION_LOCATION = 1;
+    public final static int REQUEST_GAME = 2;
 
     public final static String EXTRA_ROOM = "extra.room";
 

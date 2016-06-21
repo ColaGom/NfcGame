@@ -49,14 +49,14 @@ public class MainActivity extends BaseActivity {
                     showToast(R.string.success_join);
                     Global.setLoginUser((User)object);
                     finish();
-                    ActivityStarter.startHomeActivity(MainActivity.this);
+                    startHomeActivity();
                 }
 
                 @Override
                 public void onFail() {
                     showToast(R.string.fail_join);
                 }
-            }, Dialoger.createProgressDialog(this, false));
+            }, getProgressDialog());
         }
     }
 

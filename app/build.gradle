@@ -7,7 +7,7 @@ android {
 
     defaultConfig {
         applicationId "com.bluewave.nfcgame"
-        minSdkVersion 14
+        minSdkVersion 16
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
@@ -32,5 +32,4 @@ dependencies {
     compile 'com.mcxiaoke.volley:library:1.0.+'
     compile 'com.navercorp.volleyextensions:volleyer:2.0.+'
     compile 'com.navercorp.volleyextensions:volley-caches:2.0.+'
-    compile 'com.google.android.gms:play-services:9.0.0'
 }

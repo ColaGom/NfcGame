@@ -9,11 +9,4 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
  */
 public class Dialoger {
 
-    public static SweetAlertDialog createProgressDialog(Context c, boolean cancel)
-    {
-        SweetAlertDialog dialog = new SweetAlertDialog(c, SweetAlertDialog.PROGRESS_TYPE);
-        dialog.setCancelable(cancel);
-
-        return dialog;
-    }
 }

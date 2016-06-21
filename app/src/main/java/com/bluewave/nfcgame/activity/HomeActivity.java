@@ -1,6 +1,7 @@
 package com.bluewave.nfcgame.activity;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -14,8 +15,7 @@ import android.widget.ListView;
 import com.bluewave.nfcgame.R;
 import com.bluewave.nfcgame.adapter.RoomAdapter;
 import com.bluewave.nfcgame.base.BaseActivity;
-import com.bluewave.nfcgame.common.ActivityStarter;
-import com.bluewave.nfcgame.common.Dialoger;
+import com.bluewave.nfcgame.common.Const;
 import com.bluewave.nfcgame.common.Global;
 import com.bluewave.nfcgame.model.Room;
 import com.bluewave.nfcgame.net.Client;
@@ -55,7 +55,7 @@ public class HomeActivity extends BaseActivity implements SwipeRefreshLayout.OnR
             public void run() {
                 swipeContainer.setRefreshing(true);
 
-                getRoomList();
+                requestRoomList();
             }
         });
     }
@@ -85,7 +85,7 @@ public class HomeActivity extends BaseActivity implements SwipeRefreshLayout.OnR
                     return;
                 }
                 dialog.dismiss();
-                RoomClient.create(name, limit, new Client.Handler() {
+                RoomClient.create(Global.getLoginUser().uid ,name, limit, new Client.Handler() {
                     @Override
                     public void onSuccess(Object object) {
                         showToast(R.string.success_create_room);
@@ -97,7 +97,7 @@ public class HomeActivity extends BaseActivity implements SwipeRefreshLayout.OnR
                     public void onFail() {
                         showToast(R.string.fail_create_room);
                     }
-                },Dialoger.createProgressDialog(HomeActivity.this, false));
+                },getProgressDialog());
             }
         }).setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
             @Override
@@ -112,7 +112,7 @@ public class HomeActivity extends BaseActivity implements SwipeRefreshLayout.OnR
         RoomClient.enter(Global.getLoginUser().uid, room.uid, new Client.Handler() {
             @Override
             public void onSuccess(Object object) {
-                ActivityStarter.startGameActivity(HomeActivity.this, room);
+                startGameActivity(room);
                 showToast(R.string.success_enter_room);
             }
 
@@ -120,7 +120,16 @@ public class HomeActivity extends BaseActivity implements SwipeRefreshLayout.OnR
             public void onFail() {
                 showToast(R.string.fail_enter_room);
             }
-        },Dialoger.createProgressDialog(HomeActivity.this, false));
+        },getProgressDialog());
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == Const.REQUEST_GAME)
+        {
+            requestRoomList();
+        }
     }
 
     @OnClick(R.id.btn_enter)
@@ -139,7 +148,7 @@ public class HomeActivity extends BaseActivity implements SwipeRefreshLayout.OnR
         }
     }
 
-    private void getRoomList()
+    private void requestRoomList()
     {
         adapterRoom.clear();
 
@@ -155,12 +164,12 @@ public class HomeActivity extends BaseActivity implements SwipeRefreshLayout.OnR
             public void onFail() {
                 swipeContainer.setRefreshing(false);
             }
-        }, Dialoger.createProgressDialog(this, false));
+        }, getProgressDialog());
     }
 
     @Override
     public void onRefresh() {
-        getRoomList();
+        requestRoomList();
     }
 }
 

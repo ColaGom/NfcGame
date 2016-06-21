@@ -20,4 +20,10 @@
     <string name="fail_create_room">방 생성 실패</string>
     <string name="fail_enter_room">방입장 실패</string>
     <string name="success_enter_room">방입장 성공</string>
+    <string name="start_game">게임 시작</string>
+    <string name="success_exit_room">퇴장 성공</string>
+    <string name="fail_exit_room">퇴장 실패</string>
+    <string name="need_permission">권한이 필요합니다.</string>
+    <string name="finished_game">게임이 종료되었습니다.</string>
+    <string name="success_start_game">게임이 시작되었습니다.</string>
 </resources>

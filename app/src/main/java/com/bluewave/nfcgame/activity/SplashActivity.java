@@ -17,7 +17,7 @@ public class SplashActivity extends BaseActivity {
             public void run(){
                 try {
                     sleep(3000);
-                    ActivityStarter.startMainActivity(SplashActivity.this);
+                    startMainActivity();
                     finish();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
