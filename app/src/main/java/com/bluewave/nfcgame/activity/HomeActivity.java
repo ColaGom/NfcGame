@@ -140,6 +140,12 @@ public class HomeActivity extends BaseActivity implements SwipeRefreshLayout.OnR
         if(selectPos != AdapterView.INVALID_POSITION)
         {
             Room room = adapterRoom.getItem(selectPos);
+
+            if(room.join_count >= room.limit_count)
+            {
+                showToast(R.string.limit_user);
+            }
+
             enterRoom(room);
         }
         else

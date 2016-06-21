@@ -26,4 +26,5 @@
     <string name="need_permission">권한이 필요합니다.</string>
     <string name="finished_game">게임이 종료되었습니다.</string>
     <string name="success_start_game">게임이 시작되었습니다.</string>
+    <string name="limit_user">제한인원이 가득찼습니다.</string>
 </resources>
